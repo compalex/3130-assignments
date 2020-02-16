@@ -17,4 +17,5 @@ public class Constants {
     public static final String ITEMCARDS_PATH = "itemCards.csv";
     public static final String PRICECARD_PATH = "priceCard.csv";
     public static final String ERROR_DATA_MSG = "Wrong data";
+    public static final int ITEM_QUANTITY = 3;
 }
