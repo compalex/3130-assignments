@@ -5,30 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import assignment_1.model.Customer;
+import assignment_1.model.Transaction;
+
 public class CustomerService {
-    public static List<Customer> loadCustomers() {
+    
+    public static List<Customer> loadCustomersWithTransactions() {
         List<Customer> customers = CSVReader.getCustomers();     
-        checkForDuplicates(customers);
-        List<Transaction> transactions = CSVReader.getTransactions(customers);
-        customers = handleTransactions(customers, transactions);
+        customers = removeDuplicates(customers);
+        List<Transaction> transactions = CSVReader.getTransactions();
+        customers = addTransactions(customers, transactions);
         return customers;
     }
     
-    private static void checkForDuplicates(List<Customer> customers) {
+    private static List<Customer> removeDuplicates(List<Customer> customers) {
         if(customers == null || customers.isEmpty()) {
-            return;
+            return customers;
         }
-        List<String> customerIDs = new ArrayList<>();
+        Map<String, Customer> customerMap = new HashMap<>();
         
+        //duplicates will be deleted by putting them into Map
         for(Customer customer : customers) {
-            if(customerIDs.contains(customer.getId())) {
+            if(customerMap.containsKey(customer.getId())) {
                 System.err.println(Constants.ERROR_CUSTOMER_ID_DUPLICATION_MSG);
             }
-            customerIDs.add(customer.getId());
+            customerMap.put(customer.getId(), customer);
         }
+        return new ArrayList<>(customerMap.values());
     }
 
-    private static List<Customer> handleTransactions(List<Customer> customers, List<Transaction> transactions) {
+    private static List<Customer> addTransactions(List<Customer> customers, 
+            List<Transaction> transactions) {
         if(customers == null || customers.isEmpty() || transactions == null) {
             return customers;
         }
@@ -39,12 +46,12 @@ public class CustomerService {
         }
         
         for(Transaction transaction : transactions) {
-            if(customerMap.containsValue(transaction.getCustomer())) {
-                customerMap.get(transaction.getCustomer().getId()).getTransactions().add(transaction);
+            if(customerMap.containsKey(transaction.getCustomerId())) {
+                customerMap.get(transaction.getCustomerId()).getTransactions().add(transaction);
             } else {
                 System.err.println(Constants.ERROR_NO_CUSTOMER_MSG);
             }
         }
-        return customers;
+        return new ArrayList<>(customerMap.values());
     }
 }

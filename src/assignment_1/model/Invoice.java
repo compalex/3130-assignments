@@ -1,7 +1,10 @@
-package assignment_1;
+package assignment_1.model;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import assignment_1.Constants;
+import assignment_1.Constants.TransactionType;
 
 public class Invoice {
     private String customerId;
@@ -38,22 +41,28 @@ public class Invoice {
         return records;
     }
     
-    public void setRecordsAndBalance(List<Transaction> transactions) {
+    public void setRecords(List<Transaction> transactions) {
         records = new ArrayList<>();
+        
+        for(Transaction transaction : transactions) {
+            records.add(String.format(Constants.FORMAT_1, transaction.getId(),
+                    transaction.getType(), transaction.getAmount()));
+        }
+    }
+    
+    public double getCurrentBalance() {
+        return currentBalance;
+    }
+    
+    public void setCurrentBalance(List<Transaction> transactions) {
         currentBalance = previousBalance;
         
         for(Transaction transaction : transactions) {
-            records.add(transaction.getId() + "\t" + 
-                transaction.getType() + "\t" + transaction.getAmount());
             if(transaction.getType() == TransactionType.Order) {
                 currentBalance += transaction.getAmount();
             } else {
                 currentBalance -= transaction.getAmount();
             }
         }
-    }
-    
-    public double getCurrentBalance() {
-        return currentBalance;
     }
 }

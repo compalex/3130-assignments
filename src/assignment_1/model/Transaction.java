@@ -1,10 +1,12 @@
-package assignment_1;
+package assignment_1.model;
+
+import assignment_1.Constants.TransactionType;
 
 public class Transaction {
-    private Customer customer;
     private TransactionType type;
     private String id;
     private String item;
+    private String customerId;
     private int quantity;
     private double price;
     private double amount;
@@ -20,15 +22,15 @@ public class Transaction {
         this.amount = amount;
     }
     
-    public Customer getCustomer() {
-        return customer;
+    public String getCustomerId() {
+        return customerId;
     }
     
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
     
-    public TransactionType getType() {
+    public TransactionType getType() {                               
         return type;
     }
     

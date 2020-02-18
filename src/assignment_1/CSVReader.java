@@ -7,7 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import assignment_1.Constants.TransactionType;
+import assignment_1.model.Customer;
+import assignment_1.model.Transaction;
+
 public class CSVReader {
+    
     public static List<Customer> getCustomers() {
         List<Customer> customers = new ArrayList<>();
         List<String[]> allData = getAllData(new File(Constants.MASTER_PATH));
@@ -22,19 +27,13 @@ public class CSVReader {
         return customers;
     }
     
-    public static List<Transaction> getTransactions(List<Customer> customers) {
+    public static List<Transaction> getTransactions() {
         List<Transaction> transactions = new ArrayList<>();
         List<String[]> allData = getAllData(new File(Constants.TRANSACTION_PATH));
         
         for(String[] record : allData) {
             Transaction transaction = new Transaction();
-            
-            for(Customer customer : customers) {
-                if(customer.getId().equals(record[0])) {
-                    transaction.setCustomer(customer);
-                }
-            }
-
+            transaction.setCustomerId(record[0]);
             switch(record[1]) {
                 case "O":
                     transaction.setType(TransactionType.Order);
@@ -57,18 +56,16 @@ public class CSVReader {
     }
 
     private static List<String[]> getAllData(File file) {
-        BufferedReader br = null;
         List<String[]> records = new ArrayList<String[]>(); 
-        String line;
-        try {
-            br = new BufferedReader(new FileReader(file));
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {  
+            String line = br.readLine();
             
             while((line = br.readLine()) != null) {
-                String[] values = line.split(",");
+                String[] values = line.split(Constants.SEPARATOR);
                 records.add(values);
             }
-            br.close();
         } catch (IOException e) {
+            System.err.println(Constants.ERROR_DATA_MSG);
             e.printStackTrace();
         }
         return records;
