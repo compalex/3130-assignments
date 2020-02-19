@@ -7,10 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVReader {
-    public static double[] getPrices() {
+    
+    public static List<Double> getPrices() {
         List<String[]> allData = getAllData(new File(Constants.PRICECARD_PATH));
-        return new double[] {Double.parseDouble(allData.get(0)[0]),
-                Double.parseDouble(allData.get(0)[1]), Double.parseDouble(allData.get(0)[2])};
+        List<Double> prices = new ArrayList<>();
+        
+        for(String data : allData.get(0)) {
+            prices.add(Double.parseDouble(data));
+        }
+        return prices;
     }
     
     public static List<ItemCard> getItemCards() {
@@ -22,17 +27,20 @@ public class CSVReader {
             
             switch(record[0]) {
                 case "s":
-                    itemCard.setType(Constants.ItemType.Shipment);
+                    itemCard.setType(Constants.CardType.Shipment);
                     break;
                 case "o":
-                    itemCard.setType(Constants.ItemType.Order);
+                    itemCard.setType(Constants.CardType.Order);
                     break;
                 default:
                     System.err.println(Constants.ERROR_DATA_MSG);
             }
-            itemCard.setCity(record[1]);
-            itemCard.setAmounts(Integer.parseInt(record[2]), 
-                    Integer.parseInt(record[3]), Integer.parseInt(record[4]));
+            itemCard.setCity(Constants.City.valueOf(record[1]));
+            itemCard.setAmounts(new ArrayList<>());
+            
+            for(int i = 1; i <= Constants.ITEM_NUMBER; i++) {
+                itemCard.getAmounts().add(Integer.parseInt(record[i + 1]));
+            }
             itemCards.add(itemCard);
         }
         return itemCards;

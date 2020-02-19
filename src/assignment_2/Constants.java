@@ -6,16 +6,17 @@ public class Constants {
         LosAngeles,
         Miami,
         Houston,
-        Chicago;
+        Chicago
     }
     
-    public enum ItemType {
+    public enum CardType {
         Shipment,
         Order
     }
+
     public static final String SEPARATOR = ",";
     public static final String ITEMCARDS_PATH = "itemCards.csv";
     public static final String PRICECARD_PATH = "priceCard.csv";
     public static final String ERROR_DATA_MSG = "Wrong data";
-    public static final int ITEM_QUANTITY = 3;
+    public static final int ITEM_NUMBER = 3;
 }

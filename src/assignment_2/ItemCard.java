@@ -1,15 +1,17 @@
 package assignment_2;
 
+import java.util.List;
+
 public class ItemCard {
-    private Constants.ItemType type;
+    private Constants.CardType type;
     private Constants.City city;
-    private int[] amounts;
+    private List<Integer> amounts;
     
-    public Constants.ItemType getType() {
+    public Constants.CardType getType() {
         return type;
     }
     
-    public void setType(Constants.ItemType type) {
+    public void setType(Constants.CardType type) {
         this.type = type;
     }
     
@@ -17,33 +19,15 @@ public class ItemCard {
         return city;
     }
     
-    public void setCity(String stringCity) {
-        switch(stringCity) {
-            case "New York":
-                city = Constants.City.NewYork;
-                break;
-            case "Los Angeles":
-                city = Constants.City.LosAngeles;
-                break;
-            case "Miami":
-                city = Constants.City.Miami;
-                break;
-            case "Houston":
-                city = Constants.City.Houston;
-                break;
-            case "Chicago":
-                city = Constants.City.Chicago;
-                break;
-            default:
-                System.err.println(Constants.ERROR_DATA_MSG);    
-        }
+    public void setCity(Constants.City city) {
+        this.city = city;
     }
     
-    public int[] getAmounts() {
+    public List<Integer> getAmounts() {
         return amounts;
     }
-    
-    public void setAmounts(int amt1, int amt2, int amt3) {
-        amounts =  new int[] {amt1, amt2, amt3};
+
+    public void setAmounts(List<Integer> amounts) {
+        this.amounts = amounts;
     }
 }
