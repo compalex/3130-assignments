@@ -1,20 +1,14 @@
 package assignment_2;
 
+import assignment_2.Constants.ItemType;
+
 public class Item {
-    private int idNum;
+    private ItemType type;
     private double price;
     
-    public Item(int idNum, double price) {
-        this.idNum = idNum;
+    public Item(ItemType type, double price) {
+        this.setType(type);
         this.price = price;
-    }
-
-    public int getIdNum() {
-        return idNum;
-    }
-
-    public void setIdNum(int idNum) {
-        this.idNum = idNum;
     }
     
     public double getPrice() {
@@ -23,5 +17,13 @@ public class Item {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public ItemType getType() {
+        return type;
+    }
+
+    public void setType(ItemType type) {
+        this.type = type;
     }
 }

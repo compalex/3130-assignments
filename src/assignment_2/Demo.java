@@ -12,22 +12,23 @@ import java.util.Map;
 public class Demo {
     
     public static void main(String[] args) {
-        //getting the list of prices from "priceCard.csv"
-        List<Double> prices = CardService.getPrices();
-        //creating the list of 5 warehouses with 3 items in each
-        List<Warehouse> warehouses = WarehouseService.getInstance().getWarehouses(prices);
-        //getting the list of all cards from "itemCard.csv" 
+        //Creating the list of 5 Warehouses with 3 Items in each
+        //Each Item has a price from "priceCard.csv" 
+        List<Warehouse> warehouses = WarehouseService.getWarehousesWithItems();
+        
+        //getting the list of all cards from "itemCards.csv" 
         List<ItemCard> itemCards = CardService.getItemCards();
         
-        //processing and printing of itemCards
+        //processing and printing
         for(ItemCard itemCard : itemCards) {
-            System.out.println(itemCard);
+            CardService.printItemCard(itemCard);
             CardService.processItemCard(itemCard);
-            
+            WarehouseService.printWarehouse(WarehouseService.getWarehouse(itemCard.getCity()));
+            System.out.println(Constants.LINE_SEPARATOR);
         }
         System.out.println();
         
-        printWarehouses(warehouses);
+        //printWarehouses(warehouses);
         
         //1by1 each card gives response to main
         
@@ -39,13 +40,8 @@ public class Demo {
             System.out.println(w.getCity());
             Map<Item, Integer> items = w.getItems();
             
-            for(int i = 0; i < Constants.ITEM_NUMBER; i++) {
-                for(Item item : w.getItems().keySet()) {
-                    if(item.getIdNum() == i+1) {
-                        System.out.println(item.getIdNum() + " price: " + item.getPrice() + " num: " + items.get(item));
-                    }
-                }
-                
+            for(Item item : w.getItems().keySet()) {
+                System.out.println(item.getType() + " price: " + item.getPrice() + " num: " + items.get(item));
             }
             System.out.println();
         }

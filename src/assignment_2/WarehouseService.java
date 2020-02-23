@@ -1,33 +1,37 @@
 package assignment_2;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class WarehouseService {
-    private static WarehouseService instance;
-    private List<Warehouse> warehouses;
-    
-    public static WarehouseService getInstance() {
-        if(instance == null) {
-            instance = new WarehouseService();
-        }
-        return instance;
-    }
 
-    public List<Warehouse> getWarehouses(List<Double> prices) {
-        if(warehouses == null) {
-            warehouses = new ArrayList<>();
-        }
-        if(warehouses.isEmpty()) {
-            for(Constants.City city : Constants.City.values()) {
-                warehouses.add(new Warehouse(city, prices)); 
+    public static List<Warehouse> getWarehousesWithItems() {
+        List<Warehouse> warehouses = getWarehouses();
+        Set<Item> itemSet = getItems();
+        
+        for(Warehouse warehouse : warehouses) {
+            Map<Item, Integer> itemMap = new HashMap<>();
+            
+            for(Item item : itemSet) {
+                itemMap.put(item, 0);
             }
+            warehouse.setItems(itemMap);
         }
-        return warehouses;   
+        return warehouses;
     }
     
-    public Warehouse getWarehouse(Constants.City city) {
-        for(Warehouse warehouse : warehouses) {
+    public static List<Warehouse> getWarehouses() {
+        return Factory.getInstance().getWarehouses();   
+    }
+    
+    public static Set<Item> getItems() {
+        return Factory.getInstance().getItems();
+    }
+    
+    public static Warehouse getWarehouse(Constants.City city) {
+        for(Warehouse warehouse : getWarehouses()) {
             if(city == warehouse.getCity()) {
                 return warehouse;
             }
@@ -36,4 +40,14 @@ public class WarehouseService {
     }
     //addItem()
     //when add to warehouse, check if Map has this item//like lazy init
+
+    public static void printWarehouse(Warehouse warehouse) {
+        String line = warehouse.getCity() + " ";
+        Map<Item, Integer> itemMap = warehouse.getItems();
+        
+        for(Item item : itemMap.keySet()) {
+            line += item.getType() + "s:" + itemMap.get(item) + " ";
+        }
+        System.out.println(line);
+    }
 }

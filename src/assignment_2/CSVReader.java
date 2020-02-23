@@ -4,18 +4,34 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CSVReader {
-    
-    public static List<Double> getPrices() {
+
+    public static Set<Item> getItems() {
         List<String[]> allData = getAllData(new File(Constants.PRICECARD_PATH));
-        List<Double> prices = new ArrayList<>();
+        Set<Item> items = new HashSet<>();
         
-        for(String data : allData.get(0)) {
-            prices.add(Double.parseDouble(data));
+        for(Constants.ItemType type : Constants.ItemType.values()) {
+            switch(type) {
+                case Laptop:
+                    items.add(new Item(type, Double.parseDouble(allData.get(0)[0])));
+                    break;
+                case Printer:
+                    items.add(new Item(type, Double.parseDouble(allData.get(0)[1])));
+                    break;
+                case Table:
+                    items.add(new Item(type, Double.parseDouble(allData.get(0)[2])));
+                    break;
+                default:
+                    System.out.println(Constants.ERROR_DATA_MSG);
+            }
         }
-        return prices;
+        return items;
     }
     
     public static List<ItemCard> getItemCards() {
@@ -36,11 +52,26 @@ public class CSVReader {
                     System.err.println(Constants.ERROR_DATA_MSG);
             }
             itemCard.setCity(Constants.City.valueOf(record[1]));
-            itemCard.setAmounts(new ArrayList<>());
             
-            for(int i = 1; i <= Constants.ITEM_NUMBER; i++) {
-                itemCard.getAmounts().add(Integer.parseInt(record[i + 1]));
+            Set<Item> items = WarehouseService.getItems();
+            Map<Item, Integer> itemMap = new HashMap<>();
+            
+            for(Item item : items) {
+                switch(item.getType()) {
+                    case Laptop:
+                        itemMap.put(item, Integer.parseInt(record[2]));
+                        break;
+                    case Printer:
+                        itemMap.put(item, Integer.parseInt(record[3]));
+                        break;
+                    case Table:
+                        itemMap.put(item, Integer.parseInt(record[4]));
+                        break;
+                    default:
+                        System.out.println(Constants.ERROR_DATA_MSG);
+                }
             }
+            itemCard.setItems(itemMap);
             itemCards.add(itemCard);
         }
         return itemCards;

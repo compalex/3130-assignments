@@ -1,11 +1,12 @@
 package assignment_2;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemCard {
     private Constants.CardType type;
     private Constants.City city;
-    private List<Integer> amounts;
+    private Map<Item, Integer> items;
     
     public Constants.CardType getType() {
         return type;
@@ -22,12 +23,15 @@ public class ItemCard {
     public void setCity(Constants.City city) {
         this.city = city;
     }
-    
-    public List<Integer> getAmounts() {
-        return amounts;
+
+    public Map<Item, Integer> getItems() {
+        if(items == null) {
+            items = new HashMap<>();
+        }
+        return items;
     }
 
-    public void setAmounts(List<Integer> amounts) {
-        this.amounts = amounts;
+    public void setItems(Map<Item, Integer> items) {
+        this.items = items;
     }
 }

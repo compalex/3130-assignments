@@ -6,16 +6,21 @@ import java.util.Map;
 public class CardService {
 
     public static List<ItemCard> getItemCards() {
-        return CSVReader.getItemCards();        
+        List<ItemCard> itemCards = CSVReader.getItemCards();   
+        if(itemCards == null || itemCards.isEmpty()) {
+            return null;
+        } else {
+            return itemCards;
+        }
     }  
 
     public static void processItemCard(ItemCard itemCard) {
         switch(itemCard.getType()) {
             case Shipment:
-                CardService.processShipmentCard(itemCard);
+                processShipmentCard(itemCard);
                 break;
             case Order:
-                //bla
+                processOrderCard(itemCard);
                 break;
             default:
                 System.err.println(Constants.ERROR_DATA_MSG);
@@ -23,31 +28,38 @@ public class CardService {
     }
 
     private static void processShipmentCard(ItemCard itemCard) {
-        Warehouse warehouse = 
-                WarehouseService.getInstance().getWarehouse(itemCard.getCity());
+        Warehouse warehouse = WarehouseService.getWarehouse(itemCard.getCity());
         Map<Item, Integer> itemMap = warehouse.getItems();
         
         for(Item item : itemMap.keySet()) {
-            itemMap.put(item, itemMap.get(item) + itemCard.getAmounts().get(item.getIdNum() - 1));
+            itemMap.put(item, itemMap.get(item) + itemCard.getItems().get(item));
         }
     }
     
     private static void processOrderCard(ItemCard itemCard) {
-        Warehouse warehouse = 
-                WarehouseService.getInstance().getWarehouse(itemCard.getCity());
+        Warehouse warehouse = WarehouseService.getWarehouse(itemCard.getCity());
         Map<Item, Integer> itemMap = warehouse.getItems();
         
-        
         for(Item item : itemMap.keySet()) {
-            if(itemCard.getAmounts().get(item.getIdNum() - 1) <= itemMap.get(item)) {
-                itemMap.put(item, itemMap.get(item) + itemCard.getAmounts().get(item.getIdNum() - 1));
+            if(itemMap.get(item) >= itemCard.getItems().get(item)) {
+                itemMap.put(item, itemMap.get(item) - itemCard.getItems().get(item));
             } else {
-                
+                System.out.println("no place");
             }
         }
     }
 
-    public static List<Double> getPrices() {
-        return CSVReader.getPrices();
+    public static void printItemCard(ItemCard itemCard) {
+        if(itemCard == null) {
+            return;
+        }
+        String line = "Processing the card: '";
+        line += itemCard.getType() + " " + itemCard.getCity();
+        
+        for(Item item : itemCard.getItems().keySet()) {
+                line += " " + item.getType() + ":" + itemCard.getItems().get(item);
+        }
+        line += "'";
+        System.out.println(line);   
     }
 }
