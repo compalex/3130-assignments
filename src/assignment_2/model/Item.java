@@ -1,4 +1,4 @@
-package model;
+package assignment_2.model;
 
 public class Item {
     

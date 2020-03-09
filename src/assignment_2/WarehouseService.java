@@ -2,7 +2,7 @@ package assignment_2;
 
 import java.util.Map;
 import assignment_2.Constants.City;
-import model.Item;
+import assignment_2.model.Item;
 
 public class WarehouseService {
     

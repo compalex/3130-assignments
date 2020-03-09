@@ -3,9 +3,10 @@ package assignment_2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import model.Warehouse;
-import model.Item;
-import model.Item.Type;
+
+import assignment_2.model.Item;
+import assignment_2.model.Warehouse;
+import assignment_2.model.Item.Type;
 
 public class WarehouseManager {
     private List<Warehouse> warehouses;

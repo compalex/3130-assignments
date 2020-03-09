@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import assignment_2.Constants.City;
-import model.Card;
-import model.Item;
-import model.Warehouse;
+import assignment_2.model.Card;
+import assignment_2.model.Item;
+import assignment_2.model.Warehouse;
 
 public class CardService {
 
@@ -23,19 +23,18 @@ public class CardService {
         switch(card.getType()) {
             case Shipment:
                 processShipmentCard(card, manager);
-                WarehouseService.printWarehouse(card.getCity(), manager);
                 break;
             case Order:
                 double orderPrice = processOrderCard(card, manager);
-                WarehouseService.printWarehouse(card.getCity(), manager);
                 if(orderPrice > 0) {
-                    System.out.println("Price of Order: " + orderPrice + "$");
+                    System.out.printf(Constants.ORDER_PRICE, orderPrice);
+                } else {
+                    System.out.println(Constants.ORDER_UNFILLED);
                 }
                 break;
             default:
                 System.err.println(Constants.ERROR_DATA_MSG);
         }    
-        System.out.println(Constants.LINE_SEPARATOR);
     }
 
     private static void processShipmentCard(Card itemCard, WarehouseManager manager) {
@@ -99,7 +98,6 @@ public class CardService {
                 }
                 return orderPrice;
             } else {
-                System.out.println(Constants.ORDER_UNFILLED);
                 return 0;
             }
         }

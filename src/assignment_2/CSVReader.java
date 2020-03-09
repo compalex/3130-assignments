@@ -10,8 +10,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import model.Card;
-import model.Item;
+
+import assignment_2.model.Card;
+import assignment_2.model.Item;
 
 public class CSVReader {
 

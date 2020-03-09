@@ -15,4 +15,5 @@ public class Constants {
     public static final String ERROR_DATA_MSG = "Wrong data";
     public static final String LINE_SEPARATOR = "_____________________________________________________\n";
     public static final String ORDER_UNFILLED = "Order Unfilled!";
+    public static final String ORDER_PRICE = "Price of Order: %.2f$\n";
 }
