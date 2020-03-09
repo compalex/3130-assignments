@@ -1,18 +1,25 @@
-package assignment_2;
+package model;
 
 import java.util.HashMap;
 import java.util.Map;
+import assignment_2.Constants;
 
-public class ItemCard {
-    private Constants.CardType type;
-    private Constants.City city;
-    private Map<Item, Integer> items;
+public class Card {
     
-    public Constants.CardType getType() {
+    public enum Type {
+        Shipment,
+        Order
+    }
+    
+    private Type type;
+    private Constants.City city;
+    private Map<Item.Type, Integer> items;
+    
+    public Type getType() {
         return type;
     }
     
-    public void setType(Constants.CardType type) {
+    public void setType(Type type) {
         this.type = type;
     }
     
@@ -24,14 +31,14 @@ public class ItemCard {
         this.city = city;
     }
 
-    public Map<Item, Integer> getItems() {
+    public Map<Item.Type, Integer> getItems() {
         if(items == null) {
             items = new HashMap<>();
         }
         return items;
     }
 
-    public void setItems(Map<Item, Integer> items) {
+    public void setItems(Map<Item.Type, Integer> items) {
         this.items = items;
     }
 }

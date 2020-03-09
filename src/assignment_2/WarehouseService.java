@@ -1,53 +1,19 @@
 package assignment_2;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import assignment_2.Constants.City;
+import model.Item;
 
 public class WarehouseService {
-
-    public static List<Warehouse> getWarehousesWithItems() {
-        List<Warehouse> warehouses = getWarehouses();
-        Set<Item> itemSet = getItems();
+    
+    public static void printWarehouse(City city, WarehouseManager manager) {
+        Map<Item.Type, Integer> itemMap = manager.getWarehouse(city).getItems();
+        String line = "Result: Warehouse at " + city + " has";
         
-        for(Warehouse warehouse : warehouses) {
-            Map<Item, Integer> itemMap = new HashMap<>();
-            
-            for(Item item : itemSet) {
-                itemMap.put(item, 0);
-            }
-            warehouse.setItems(itemMap);
-        }
-        return warehouses;
-    }
-    
-    public static List<Warehouse> getWarehouses() {
-        return Factory.getInstance().getWarehouses();   
-    }
-    
-    public static Set<Item> getItems() {
-        return Factory.getInstance().getItems();
-    }
-    
-    public static Warehouse getWarehouse(Constants.City city) {
-        for(Warehouse warehouse : getWarehouses()) {
-            if(city == warehouse.getCity()) {
-                return warehouse;
-            }
-        }
-        return null;
-    }
-    //addItem()
-    //when add to warehouse, check if Map has this item//like lazy init
-
-    public static void printWarehouse(Warehouse warehouse) {
-        String line = warehouse.getCity() + " ";
-        Map<Item, Integer> itemMap = warehouse.getItems();
+        line += " " + Item.Type.Laptop + ":" + itemMap.get(Item.Type.Laptop);
+        line += " " + Item.Type.Printer + ":" + itemMap.get(Item.Type.Printer);
+        line += " " + Item.Type.Table + ":" + itemMap.get(Item.Type.Table);
         
-        for(Item item : itemMap.keySet()) {
-            line += item.getType() + "s:" + itemMap.get(item) + " ";
-        }
         System.out.println(line);
     }
 }

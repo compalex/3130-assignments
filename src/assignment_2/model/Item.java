@@ -1,12 +1,17 @@
-package assignment_2;
-
-import assignment_2.Constants.ItemType;
+package model;
 
 public class Item {
-    private ItemType type;
+    
+    public enum Type {
+        Laptop,
+        Printer,
+        Table
+    }
+    
+    private Type type;
     private double price;
     
-    public Item(ItemType type, double price) {
+    public Item(Type type, double price) {
         this.setType(type);
         this.price = price;
     }
@@ -19,11 +24,11 @@ public class Item {
         this.price = price;
     }
 
-    public ItemType getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(ItemType type) {
+    public void setType(Type type) {
         this.type = type;
     }
 }

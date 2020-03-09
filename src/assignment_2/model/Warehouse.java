@@ -1,13 +1,22 @@
-package assignment_2;
+package model;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import assignment_2.Constants;
+
 public class Warehouse {
+
     private Constants.City city;
-    private Map<Item, Integer> items;
+    private Map<Item.Type, Integer> items;
 
     public Warehouse(Constants.City city) {
         this.city = city;
+        items = new HashMap<>();
+            
+        for(Item.Type type : Item.Type.values()) {
+            items.put(type, 0);
+        }
     }
     
     public Constants.City getCity() {
@@ -18,11 +27,11 @@ public class Warehouse {
         this.city = city;
     }
 
-    public Map<Item, Integer> getItems() {
+    public Map<Item.Type, Integer> getItems() {
         return items;
     }
     
-    public void setItems(Map<Item, Integer> items) {
+    public void setItems(Map<Item.Type, Integer> items) {
         this.items = items;
     }
 }
