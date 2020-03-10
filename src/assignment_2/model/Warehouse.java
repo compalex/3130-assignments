@@ -8,13 +8,13 @@ import assignment_2.Constants;
 public class Warehouse {
 
     private Constants.City city;
-    private Map<Item.Type, Integer> items;
+    private Map<AbstractItem.Product, Integer> items;
 
     public Warehouse(Constants.City city) {
         this.city = city;
         items = new HashMap<>();
             
-        for(Item.Type type : Item.Type.values()) {
+        for(AbstractItem.Product type : AbstractItem.Product.values()) {
             items.put(type, 0);
         }
     }
@@ -27,11 +27,11 @@ public class Warehouse {
         this.city = city;
     }
 
-    public Map<Item.Type, Integer> getItems() {
+    public Map<AbstractItem.Product, Integer> getItems() {
         return items;
     }
     
-    public void setItems(Map<Item.Type, Integer> items) {
+    public void setItems(Map<AbstractItem.Product, Integer> items) {
         this.items = items;
     }
 }

@@ -13,7 +13,7 @@ public class Card {
     
     private Type type;
     private Constants.City city;
-    private Map<Item.Type, Integer> items;
+    private Map<AbstractItem.Product, Integer> items;
     
     public Type getType() {
         return type;
@@ -31,14 +31,14 @@ public class Card {
         this.city = city;
     }
 
-    public Map<Item.Type, Integer> getItems() {
+    public Map<AbstractItem.Product, Integer> getItems() {
         if(items == null) {
             items = new HashMap<>();
         }
         return items;
     }
 
-    public void setItems(Map<Item.Type, Integer> items) {
+    public void setItems(Map<AbstractItem.Product, Integer> items) {
         this.items = items;
     }
 }
