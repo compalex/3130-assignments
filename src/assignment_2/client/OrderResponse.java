@@ -1,4 +1,4 @@
-package assignment_2.client;
+package assignment_2.demoClient;
 
 public class OrderResponse {
     private String details;

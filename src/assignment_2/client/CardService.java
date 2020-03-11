@@ -1,4 +1,4 @@
-package assignment_2.client;
+package assignment_2.demoClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,12 +6,42 @@ import java.util.Map;
 import assignment_2.CSVReader;
 import assignment_2.Constants;
 import assignment_2.Constants.City;
+import assignment_2.itemProcessor.ItemProcessor;
 import assignment_2.model.AbstractItem;
 import assignment_2.model.AbstractItem.Product;
 import assignment_2.model.Card;
 
 public class CardService {
     private static Map<Product, Double> prices;
+
+    public static void processCard(Card card) {
+        CardService.printItemCard(card);  
+        Map<AbstractItem, Integer> items = CardService.getItemsFromCard(card);
+        ItemProcessor processor = ItemProcessor.getInstance();
+        switch(card.getType()) {
+            case Shipment:
+                boolean isSuccess = processor.processShipment(items, card.getCity());
+                if(isSuccess) {
+                    CardService.printWarehouse(card.getCity(), processor.getWarehouseState(card.getCity()));
+                } else {
+                    System.err.println(Constants.SHIPMENT_ERROR_MSG);
+                }
+                break;
+            case Order:
+                OrderResponse response = processor.processOrder(items, card.getCity());
+                if(response.isProcessed()) {
+                    System.out.print(response.getDetails());
+                    CardService.printWarehouse(card.getCity(), processor.getWarehouseState(card.getCity()));
+                    System.out.printf(Constants.ORDER_PRICE, response.getOrderPrice());
+                } else {
+                    System.out.println(Constants.ORDER_UNFILLED_MSG);
+                }
+                break;
+            default:
+                System.err.println(Constants.ERROR_DATA_MSG);
+        }
+        System.out.println(Constants.LINE_SEPARATOR);
+    }
     
     public static List<Card> getCards() {
         List<Card> itemCards = CSVReader.getCards();   
@@ -21,18 +51,17 @@ public class CardService {
         return itemCards;
     }  
 
-    public static void printItemCard(Card itemCard) {
-        if(itemCard == null) {
+    public static void printItemCard(Card card) {
+        if(card == null) {
+            System.err.println(Constants.ERROR_DATA_MSG);
             return;
         }
-        String line = "Processing the card: '";
-        line += itemCard.getType() + " " + itemCard.getCity();
-        
-        line += " " + AbstractItem.Product.Laptop + ":" + itemCard.getItems().get(AbstractItem.Product.Laptop);
-        line += " " + AbstractItem.Product.Printer + ":" + itemCard.getItems().get(AbstractItem.Product.Printer);
-        line += " " + AbstractItem.Product.Table + ":" + itemCard.getItems().get(AbstractItem.Product.Table);
-        
-        line += "'";
+        String line = Constants.PRINT_CARD;
+        line += card.getType() + " " + card.getCity();
+        Map<Product, Integer> items = card.getItems();
+        line += String.format(Constants.PROD_FORMAT, Product.Laptop, items.get(Product.Laptop));
+        line += String.format(Constants.PROD_FORMAT, Product.Printer, items.get(Product.Printer));
+        line += String.format(Constants.PROD_FORMAT, Product.Table, items.get(Product.Table));
         System.out.println(line);   
     }
     
@@ -54,10 +83,10 @@ public class CardService {
     }
     
     public static void printWarehouse(City city, Map<Product, Integer> items) {
-        String line = "Warehouse at " + city + " has";
-        line += " " + AbstractItem.Product.Laptop + ":" + items.get(AbstractItem.Product.Laptop);
-        line += " " + AbstractItem.Product.Printer + ":" + items.get(AbstractItem.Product.Printer);
-        line += " " + AbstractItem.Product.Table + ":" + items.get(AbstractItem.Product.Table);
+        String line = Constants.PRINT_WAREHOUSE + city;
+        line += String.format(Constants.PROD_FORMAT, Product.Laptop, items.get(Product.Laptop));
+        line += String.format(Constants.PROD_FORMAT, Product.Printer, items.get(Product.Printer));
+        line += String.format(Constants.PROD_FORMAT, Product.Table, items.get(Product.Table));
         System.out.println(line);
     }
 }

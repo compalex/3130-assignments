@@ -1,4 +1,4 @@
-package assignment_2.server;
+package assignment_2.itemProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,11 +6,19 @@ import assignment_2.Constants.City;
 import assignment_2.model.AbstractItem.Product;
 import assignment_2.model.WarehouseItem;
 
-public class ProcessorManager {
+public class ItemManager {
+    private static ItemManager instance;
     private List<WarehouseItem> items;
     
-    public ProcessorManager() {
+    public ItemManager() {
         items = new ArrayList<>();
+    }
+    
+    public static ItemManager getInstance() {
+        if(instance == null) {
+            instance = new ItemManager();
+        }
+        return instance;
     }
     
     public List<WarehouseItem> getByType(Product product) {
@@ -49,16 +57,14 @@ public class ProcessorManager {
     public boolean addItems(List<WarehouseItem> itemList) {
         if(itemList == null || itemList.isEmpty()) {
             return false;
-        } else {
-            return items.addAll(itemList);  
-        }
+        } 
+        return items.addAll(itemList);  
     }
     
     public boolean removeItems(List<WarehouseItem> itemList) {
         if(itemList == null || itemList.isEmpty()) {
             return false;
-        } else {
-            return items.removeAll(itemList);  
-        }
+        } 
+        return items.removeAll(itemList);  
     }
 }
