@@ -1,4 +1,4 @@
-package assignment_3.widgetPocessor;
+package assignment_3.widgetProcessor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -24,11 +24,8 @@ public class WidgetManager {
     
     public List<Widget> pollWidgets(int amount) {
         List<Widget> widgetList = new ArrayList<>();
-        if(amount > widgets.size()) {
-            amount = widgets.size();
-        }
-        
-        for(int i = 0; i < amount; i++) {
+
+        while(!widgets.isEmpty() && amount-- > 0) {
             widgetList.add(widgets.poll());
         }
         return widgetList;

@@ -1,4 +1,4 @@
-package assignment_3.widgetPocessor;
+package assignment_3.widgetProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,11 @@ import java.util.List;
 import java.util.Map;
 import assignment_3.Constants;
 import assignment_3.model.Invoice;
+import assignment_3.model.PromoRecord;
+import assignment_3.model.ReceiptRecord;
+import assignment_3.model.SalesRecord;
 import assignment_3.model.Widget;
+import assignment_3.model.WidgetPack;
 
 public class WidgetService {
     private static WidgetService instance;
@@ -23,28 +27,61 @@ public class WidgetService {
         return instance;
     }
 
-    public boolean processReceipt(int quantity, double price) {
+    public boolean processReceipt(ReceiptRecord record) {
         List<Widget> widgetList = new ArrayList<>();
         
-        for(int i = 0; i < quantity; i++) {
-            Widget widget = new Widget(price);
+        for(int i = 0; i < record.getQuantity(); i++) {
+            Widget widget = new Widget(record.getPrice());
             widgetList.add(widget);
         }
         return manager.addWidgets(widgetList);
     }
 
-    public Invoice processSales(int quantity) {
-        Invoice invoice = new Invoice();
-        List<Widget> widgets = manager.pollWidgets(quantity);
-        Map<Double, Integer> amountByPriceMap = getWidgetMap(widgets);
-        amountByPriceMap = adjustPrices(amountByPriceMap);
-        invoice.setAmountByPriceMap(amountByPriceMap);
-        invoice.setUnsold(quantity - widgets.size());
+    public Invoice processSales(SalesRecord record) {
+        List<Widget> widgets = manager.pollWidgets(record.getQuantity());
+        List<WidgetPack> widgetPacks = getWidgetPacks(widgets);
         double promoDiscount = manager.pollPromotion();
-        if(promoDiscount > 0) {
-            invoice.setPromoDiscount(promoDiscount);
+        double totalPrice = getTotalPrice(widgetPacks, promoDiscount);
+        return new Invoice()
+                .setWidgetPacks(widgetPacks)
+                .setPromoDiscount(promoDiscount)
+                .setTotalPrice(totalPrice);
+    }
+
+    private List<WidgetPack> getWidgetPacks(List<Widget> widgets) {
+        List<WidgetPack> widgetPacks = new ArrayList<>();
+        Map<Double, Integer> amountByPrice = new HashMap<>();
+        
+        for(Widget widget : widgets) {
+            amountByPrice.merge(widget.getPrice(), 1, Integer::sum);
         }
-        return invoice;
+        amountByPrice = adjustPrices(amountByPrice);
+        amountByPrice.forEach((price, amount) -> widgetPacks.add(new WidgetPack(price, amount)));
+        return widgetPacks;
+    }
+    
+    private double getTotalPrice(List<WidgetPack> widgetPacks, double promoDiscount) {
+        double totalPrice = 0;
+        
+        for(WidgetPack pack : widgetPacks) {
+            totalPrice += pack.getSales();
+        }
+        totalPrice *= (double)(100 - promoDiscount) / 100;
+        return totalPrice;
+    }
+    
+    public boolean processPromotion(PromoRecord record) {
+        List<Double> promotionList = new ArrayList<>();
+        
+        for(int i = 0; i < Constants.DISCOUNTED_CUSTOMERS_NUM; i++) {
+            promotionList.add(record.getDiscountPercentage());
+        }
+        return manager.addPromotions(promotionList);
+    }
+    
+    public List<WidgetPack> getStockRemainder() {
+        List<Widget> widgets = manager.getWidgets();
+        return getWidgetPacks(widgets);
     }
     
     private Map<Double, Integer> adjustPrices(Map<Double, Integer> prevMap) {
@@ -55,28 +92,5 @@ public class WidgetService {
             adjustedMap.put(adjustedPrice, prevMap.get(price));
         }
         return adjustedMap;
-    }
-
-    public boolean processPromotion(double percentage, int num) {
-        List<Double> promotionList = new ArrayList<>();
-        
-        for(int i = 0; i < num; i++) {
-            promotionList.add(percentage);
-        }
-        return manager.addPromotions(promotionList);
-    }
-    
-    public Map<Double, Integer> getStockRemainder() {
-        List<Widget> widgets = manager.getWidgets();
-        return getWidgetMap(widgets);
-    }
-
-    private Map<Double, Integer> getWidgetMap(List<Widget> widgets) {
-        Map<Double, Integer> map = new HashMap<>();
-        
-        for(Widget widget : widgets) {
-            map.merge(widget.getPrice(), 1, Integer::sum);
-        }
-        return map;
     }
 }

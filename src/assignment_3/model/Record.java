@@ -1,46 +1,19 @@
 package assignment_3.model;
 
-public class Record {
+public abstract class Record {
 
     public enum Type {
-        Sales,
-        Receipt,
-        Promotion
+        SALES,
+        RECEIPT,
+        PROMOTION
     }
-    private Type type;
-    private int quantity;
-    private double discountPercentage;
-    private double price;
+    protected Type type;
     
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
+    public Record(Type type) {
         this.type = type;
     }
-    
-    public int getQuantity() {
-        return quantity;
-    }
-    
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-    
-    public double getDiscountPercentage() {
-        return discountPercentage;
-    }
-    
-    public void setDiscountPercentage(double discountPercentage) {
-        this.discountPercentage = discountPercentage;
-    }
-    
-    public double getPrice() {
-        return price;
-    }
-    
-    public void setPrice(double price) {
-        this.price = price;
+
+    public Type getType() {
+        return type;
     }
 }

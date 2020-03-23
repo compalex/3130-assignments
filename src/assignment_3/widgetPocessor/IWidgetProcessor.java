@@ -1,11 +1,15 @@
-package assignment_3.widgetPocessor;
+package assignment_3.widgetProcessor;
 
-import java.util.Map;
+import java.util.List;
 import assignment_3.model.Invoice;
+import assignment_3.model.PromoRecord;
+import assignment_3.model.ReceiptRecord;
+import assignment_3.model.SalesRecord;
+import assignment_3.model.WidgetPack;
 
 public interface IWidgetProcessor {
-    Invoice processSales(int quantity);
-    boolean processReceipt(int quantity, double price);
-    boolean processPromotion(double percentage, int num);
-    Map<Double, Integer> getStockRemainder();
+    Invoice processSales(SalesRecord record);
+    boolean processReceipt(ReceiptRecord record);
+    boolean processPromotion(PromoRecord record);
+    List<WidgetPack> getStockRemainder();
 }

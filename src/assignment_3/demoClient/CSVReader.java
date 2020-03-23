@@ -1,4 +1,4 @@
-package assignment_3;
+package assignment_3.demoClient;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -6,7 +6,11 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import assignment_3.Constants;
+import assignment_3.model.PromoRecord;
+import assignment_3.model.ReceiptRecord;
 import assignment_3.model.Record;
+import assignment_3.model.SalesRecord;
 
 public class CSVReader {
     
@@ -15,20 +19,16 @@ public class CSVReader {
         List<String[]> allData = getAllData(new File(Constants.DATA_PATH));
         
         for(String[] data : allData) {
-            Record record = new Record();           
+            Record record = null;    
             switch(data[0]) {
                 case "R":
-                    record.setType(Record.Type.Receipt);
-                    record.setQuantity(Integer.parseInt(data[1]));
-                    record.setPrice(Double.parseDouble(data[2]));
+                    record = new ReceiptRecord(Integer.parseInt(data[1]), Double.parseDouble(data[2]));
                     break;
                 case "S":
-                    record.setType(Record.Type.Sales);
-                    record.setQuantity(Integer.parseInt(data[1]));
+                    record = new SalesRecord(Integer.parseInt(data[1]));
                     break;
                 case "P":
-                    record.setType(Record.Type.Promotion);
-                    record.setDiscountPercentage(Double.parseDouble(data[1].replace("%", "")));
+                    record = new PromoRecord(Double.parseDouble(data[1].replace("%", "")));
                     break;
                 default:
                     System.err.println(Constants.ERROR_DATA_MSG);
